@@ -3,6 +3,8 @@
   <head>
     <title>Car Accessories</title>
     <link rel="stylesheet" href="/css/globals.css" />
+    <!-- Include jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   </head>
   <body>
     <h1 class="heading">Car Accessories</h1>
@@ -18,7 +20,7 @@
       <label for="amount">Amount:</label>
       <input type="number" id="amount" name="amount" min="1" value="1" />
       <br />
-      <button type="button" onclick="addToProductList()">Add</button>
+      <button type="button" id="addButton">Add</button>
     </form>
 
     <h2>Product List</h2>
@@ -34,57 +36,61 @@
     </table>
 
     <p class="total">Total Price: $<span id="totalPrice">0</span></p>
+    <p class="total">Total VAT: $<span id="totalVAT">0</span></p>
     <p>Go back to <a href="/index.html">Carada</a></p>
 
     <script>
-      function calculateVAT(price) {
-        let vatRate = 0.07;
-        return price * vatRate;
-      }
-      function addToProductList() {
-        var accessory = document.getElementById("accessory");
-        var accessoryValue = accessory.value;
-        var accessoryName = accessory.options[accessory.selectedIndex].text;
-        var amount = document.getElementById("amount").value;
-        var price = calculatePrice(accessoryValue);
-        var vat = calculateVAT(price);
-        var finalPrice = price + vat;
-        var table = document.getElementById("productList");
-        var row = table.insertRow(-1);
-        var accessoryCell = row.insertCell(0);
-        var amountCell = row.insertCell(1);
-        var priceCell = row.insertCell(2);
-        var vatCell = row.insertCell(3);
-        var finalPriceCell = row.insertCell(4);
-        accessoryCell.innerHTML = accessoryName;
-        amountCell.innerHTML = amount;
-        priceCell.innerHTML = "$" + price.toFixed(2);
-        vatCell.innerHTML = "$" + vat.toFixed(2);
-        finalPriceCell.innerHTML = "$" + finalPrice.toFixed(2);
-        updateTotalPrice(price, vat);
-      }
-
-      function calculatePrice(accessory) {
-        switch (accessory) {
-          case "p123":
-            return 50;
-          case "p234":
-            return 30;
-          case "p456":
-            return 20;
-          case "p996":
-            return 40;
-          default:
-            return 0;
+      $(document).ready(function () {
+        function calculateVAT(price) {
+          let vatRate = 0.07;
+          return price * vatRate;
         }
-      }
 
-      var totalPrice = 0;
-      function updateTotalPrice(price, vat) {
-        var totalPriceElement = document.getElementById("totalPrice");
-        totalPrice += price + vat;
-        totalPriceElement.innerHTML = totalPrice.toFixed(2);
-      }
+        function calculatePrice(accessory) {
+          switch (accessory) {
+            case "p123":
+              return 50;
+            case "p234":
+              return 30;
+            case "p456":
+              return 20;
+            case "p996":
+              return 40;
+            default:
+              return 0;
+          }
+        }
+
+        var totalPrice = 0;
+        var totalVAT = 0;
+
+        function updateTotalPrice(price, vat) {
+          totalPrice += price + vat;
+          totalVAT += vat;
+          $("#totalPrice").text(totalPrice.toFixed(2));
+          $("#totalVAT").text(totalVAT.toFixed(2));
+        }
+
+        $("#addButton").click(function () {
+          var accessoryValue = $("#accessory").val();
+          var accessoryName = $("#accessory option:selected").text();
+          var amount = $("#amount").val();
+          var price = calculatePrice(accessoryValue) * amount;
+          var vat = calculateVAT(price);
+          var finalPrice = price + vat;
+
+          var rowHtml = `<tr>
+                            <td>${accessoryName}</td>
+                            <td>${amount}</td>
+                            <td>$${price.toFixed(2)}</td>
+                            <td>$${vat.toFixed(2)}</td>
+                            <td>$${finalPrice.toFixed(2)}</td>
+                         </tr>`;
+
+          $("#productList").append(rowHtml);
+          updateTotalPrice(price, vat);
+        });
+      });
     </script>
   </body>
 </html>
