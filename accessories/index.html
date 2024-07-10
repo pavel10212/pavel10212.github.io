@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Car Accessories</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+      integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
+      integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8="
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="heading">Car Accessories</h1>
+      <form id="accessoryForm" class="form-horizontal">
+        <div class="form-group">
+          <label for="accessory" class="col-sm-2 control-label"
+            >Select an accessory:</label
+          >
+          <div class="col-sm-10">
+            <select id="accessory" name="accessory" class="form-control">
+              <option value="p123">Car Cover</option>
+              <option value="p234">Seat Covers</option>
+              <option value="p456">Floor Mats</option>
+              <option value="p996">Door Visors</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="amount" class="col-sm-2 control-label">Amount:</label>
+          <div class="col-sm-10">
+            <input
+              type="number"
+              id="amount"
+              name="amount"
+              min="1"
+              value="1"
+              class="form-control"
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button type="button" id="addButton" class="btn btn-primary">
+              Add
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <h2>Product List</h2>
+
+      <table id="productList" class="table table-striped">
+        <thead>
+          <tr>
+            <th>Accessory</th>
+            <th>Amount</th>
+            <th>Price</th>
+            <th>VAT (7%)</th>
+            <th>Final Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Rows will be added here -->
+        </tbody>
+      </table>
+
+      <p class="total">Total Price: $<span id="totalPrice">0</span></p>
+      <p class="total">Total VAT: $<span id="totalVAT">0</span></p>
+      <p>Go back to <a href="/index.html">Carada</a></p>
+    </div>
+    <script>
+      $(document).ready(function () {
+        function calculateVAT(price) {
+          let vatRate = 0.07;
+          return price * vatRate;
+        }
+
+        function calculatePrice(accessory) {
+          switch (accessory) {
+            case "p123":
+              return 50;
+            case "p234":
+              return 30;
+            case "p456":
+              return 20;
+            case "p996":
+              return 40;
+            default:
+              return 0;
+          }
+        }
+
+        var totalPrice = 0;
+        var totalVAT = 0;
+
+        function updateTotalPrice(price, vat) {
+          totalPrice += price + vat;
+          totalVAT += vat;
+          $("#totalPrice").text(totalPrice.toFixed(2));
+          $("#totalVAT").text(totalVAT.toFixed(2));
+        }
+
+        $("#addButton").click(function () {
+          var accessoryValue = $("#accessory").val();
+          var accessoryName = $("#accessory option:selected").text();
+          var amount = $("#amount").val();
+          var price = calculatePrice(accessoryValue) * amount;
+          var vat = calculateVAT(price);
+          var finalPrice = price + vat;
+
+          var rowHtml = `<tr>
+                              <td>${accessoryName}</td>
+                              <td>${amount}</td>
+                              <td>$${price.toFixed(2)}</td>
+                              <td>$${vat.toFixed(2)}</td>
+                              <td>$${finalPrice.toFixed(2)}</td>
+                           </tr>`;
+          $("#productList").append(rowHtml);
+          updateTotalPrice(price, vat);
+        });
+      });
+    </script>
+  </body>
+</html>
