@@ -1,18 +1,29 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+}
 table {
+  border-spacing: 0px;
   border-collapse: collapse;
   width: 100%;
 }
-
-th,
+th {
+  background-color: rgb(184, 212, 231);
+  color: darkblue;
+  border: solid #000000 1px;
+}
 td {
-  text-align: left;
-  padding: 8px;
+  vertical-align: top;
+  border: solid #000000 1px;
+  padding: 5px;
 }
-
-tr:nth-child(even) {
-  background-color: #f2f2f2;
+.r {
+  text-align: right;
 }
-
-.total {
+.cen {
+  text-align: center;
+}
+.thick {
   font-weight: bold;
 }
