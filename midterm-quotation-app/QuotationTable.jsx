@@ -23,7 +23,10 @@ function QuotationTable({ data, clearDataItems, deleteByIndex }) {
   }
 
   const total = data.reduce((acc, v) => acc + v.qty * v.ppu, 0);
-  const totalDiscount = data.reduce((acc, v) => acc + parseInt(v.dsc), 0);
+  const totalDiscount = data.reduce(
+    (acc, v) => acc + parseInt(v.dsc) * v.qty,
+    0
+  );
   const totalAmount = total - totalDiscount;
 
   const clearTable = () => {
@@ -54,7 +57,7 @@ function QuotationTable({ data, clearDataItems, deleteByIndex }) {
         <tbody>
           {data.map((v, i) => {
             let noDisocunt = v.qty * v.ppu;
-            let amount = v.qty * v.ppu - v.dsc;
+            let amount = v.qty * v.ppu - v.dsc * v.qty;
             return (
               <tr key={i}>
                 <td className={style.textCenter}>
@@ -64,7 +67,7 @@ function QuotationTable({ data, clearDataItems, deleteByIndex }) {
                 <td>{v.item}</td>
                 <td className={style.textCenter}>{v.ppu}</td>
                 <td className={style.textRight}>
-                  {v.dsc === 0 ? noDisocunt : v.dsc}
+                  {v.dsc === 0 ? noDisocunt : v.dsc * v.qty}
                 </td>
                 <td className={style.textRight}>{amount}</td>
               </tr>
